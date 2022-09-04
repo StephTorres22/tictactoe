@@ -86,8 +86,15 @@ const playerFactory = (name, marker) => {
 
     const placeMarker = () => {
 
-        gameBoard.gameBoardArray.splice([i], 1, `${marker}`); //only does the last one, need to check on etch-a-sketch to see how to apply to all
+        gameBoard.gameBoardArray.push(marker);
+        displayController.cells.splice([i], 1, `${marker}`);//this doesn't work as i thought it would.
+        console.log(displayController.cells)
+        displayController.cells.forEach(cell => cell.innerText = marker)//changes all the cells inner text to 'X' apart from '9'! go figure
         
+        /* 
+        WHAT DO I NEED TO BE ABLE TO DO?
+        
+        ADD A MARKER AT THE CORRECT INDEX IN THE ARRAY GAMEBOARD, AND DISPLAY*/
     }
      
      return {name, marker, placeMarker}
@@ -107,12 +114,17 @@ const displayController = (() => {
         gridContainer.appendChild(cell);
         cell.classList.add('cell');
         cell.innerText = gameBoard.gameBoardArray[i];
-        cell.addEventListener('click', () =>{
-            playerOne.placeMarker()//works with arrow function, need to add a turn based function with an if statement so it knows whether to use playerOne,placeMarker() or playerTwo
-        })
+
+    }
+
+        const cells = Array.from(document.getElementsByClassName('cell'));
+        cells.forEach(cell => cell.addEventListener('click', () => {
+            playerOne.placeMarker()
+            gameBoard.myMethod()//works with arrow function, need to add a turn based function with an if statement so it knows whether to use playerOne,placeMarker() or playerTwo
+        }));
           
         
         
        
-    }
+    return {cells}
 })();
