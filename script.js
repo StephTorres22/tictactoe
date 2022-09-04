@@ -31,17 +31,13 @@
         If you get this running definitely come show it off in the chatroom. It’s quite an accomplishment!
 
  */
-
+const gridContainer = document.querySelector('.gridContainer');
 
 //this is a module
 //want to return the gameBoard so it can be edited by player action, placeMarker, 2D array? just arrays in an array
 const gameBoard = (() => {
     
-    let gameBoardArray = [
-        [], //(gameBoard[0][i])
-        [], //(gameBoard[1][i])
-        []  //(gameBoard[2][i])
-    ] //this is inaccessible to players in the private scope of this module. this needs to be made public 
+    let gameBoardArray = ["1","2","3","4","5","6","7", "8", "9"] //this is inaccessible to players in the private scope of this module. this needs to be made public 
     //might not be best to have an array of arrays, lots of comparison to check for 3 in a row
 
     //also with the display, array with 9 " ", iterate over to place in a 3 x 3 grid, when clicked on replace array item with marker? or does the array stay empty?
@@ -70,7 +66,22 @@ const gameBoard = (() => {
     
 })();
 
-const displayController = (() => {})();//this is displayController module
+const displayController = (() => {
+
+    for (i in gameBoard.gameBoardArray){
+
+        const cell = document.createElement('div');
+        gridContainer.appendChild(cell);
+        cell.innerText = gameBoard.gameBoardArray[i];
+        
+    }
+
+    /* 
+    3x3 grid created using empty array of gameBoardArray, 
+    each cell needs an onclicklistener calling player.placemarker
+    replacing array elements in position? */
+
+})();//this is displayController module
 
 
 //this is an object
