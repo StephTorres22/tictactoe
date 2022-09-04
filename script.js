@@ -33,22 +33,24 @@
  */
 
 
-
 //this is a module
 //want to return the gameBoard so it can be edited by player action, placeMarker, 2D array? just arrays in an array
-const GameBoard = (function(){
+const gameBoard = (() => {
     
-    let gameBoard = [
+    let gameBoardArray = [
         [], //(gameBoard[0][i])
         [], //(gameBoard[1][i])
         []  //(gameBoard[2][i])
-    ] //this is inaccessible to players in the private scope of this module. this needs to be made public
+    ] //this is inaccessible to players in the private scope of this module. this needs to be made public 
+    //might not be best to have an array of arrays, lots of comparison to check for 3 in a row
+
+    //also with the display, array with 9 " ", iterate over to place in a 3 x 3 grid, when clicked on replace array item with marker? or does the array stay empty?
 
     //so could define a function that renders the game board to user here?
 
     //do i define a method for adding a marker to the game board here? as a private function, and call it publicly so it can be accessed by player?
         let _placeMarker = (marker) =>{
-            gameBoard.push(marker)
+            gameBoardArray.push(marker)
         }
 
         //do i need different methods for first row, second row and third row
@@ -57,8 +59,9 @@ const GameBoard = (function(){
     
     return {
         myMethod: function(){
-            console.log(gameBoard)},
-        _placeMarker 
+            console.log(gameBoardArray)},
+        _placeMarker,
+        gameBoardArray
         }
         
 
@@ -66,6 +69,8 @@ const GameBoard = (function(){
 
     
 })();
+
+const displayController = (() => {})();//this is displayController module
 
 
 //this is an object
@@ -79,14 +84,20 @@ function Player(name, marker){
 }
 
 //or a factory function
+
 const playerFactory = (name, marker) => {
 
-   // const placeMarker = (marker) => marker.GameBoard().push(marker);//will this work? NOPE
-    
-    return {name, marker, placeMarker}
-}
+    const placeMarker = () => {
 
-const playerOne = playerFactory('One', 'X');
-const playerTwo = playerFactory('Two', 'O');
+        gameBoard.gameBoardArray.push(marker); //tihs works! adds to the end of the array.
+        
+    }
+     
+     return {name, marker, placeMarker}
+ }
+ 
+ const playerOne = playerFactory('One', 'X');
+ const playerTwo = playerFactory('Two', 'O');
+
 //not sure how to make the markers public to be place, also gameboard is priv
 //can you make an array with a max length? eg 3 maybe if row1.length === 3 
