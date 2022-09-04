@@ -1,0 +1,19 @@
+.gridContainer{
+    margin-top: 50px;
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(3, 200px);
+    justify-content: center;
+}
+
+.cell{
+    font-size: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    width: 200px;
+    border-style: solid;
+    border-color: black;
+
+}

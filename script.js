@@ -66,22 +66,8 @@ const gameBoard = (() => {
     
 })();
 
-const displayController = (() => {
 
-    for (i in gameBoard.gameBoardArray){
 
-        const cell = document.createElement('div');
-        gridContainer.appendChild(cell);
-        cell.innerText = gameBoard.gameBoardArray[i];
-        
-    }
-
-    /* 
-    3x3 grid created using empty array of gameBoardArray, 
-    each cell needs an onclicklistener calling player.placemarker
-    replacing array elements in position? */
-
-})();//this is displayController module
 
 
 //this is an object
@@ -100,7 +86,7 @@ const playerFactory = (name, marker) => {
 
     const placeMarker = () => {
 
-        gameBoard.gameBoardArray.push(marker); //tihs works! adds to the end of the array.
+        gameBoard.gameBoardArray.splice([i], 1, `${marker}`); //only does the last one, need to check on etch-a-sketch to see how to apply to all
         
     }
      
@@ -112,3 +98,21 @@ const playerFactory = (name, marker) => {
 
 //not sure how to make the markers public to be place, also gameboard is priv
 //can you make an array with a max length? eg 3 maybe if row1.length === 3 
+
+const displayController = (() => {
+
+    for (i in gameBoard.gameBoardArray){
+
+        const cell = document.createElement('div');
+        gridContainer.appendChild(cell);
+        cell.classList.add('cell');
+        cell.innerText = gameBoard.gameBoardArray[i];
+        cell.addEventListener('click', () =>{
+            playerOne.placeMarker()//works with arrow function, need to add a turn based function with an if statement so it knows whether to use playerOne,placeMarker() or playerTwo
+        })
+          
+        
+        
+       
+    }
+})();
