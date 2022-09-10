@@ -33,6 +33,11 @@
  */
 const gridContainer = document.querySelector('.gridContainer');
 
+function startGame() {
+
+    return gameFlow.whoseTurn()
+}
+
 
 
 const gameBoard = (() => {
@@ -41,8 +46,8 @@ const gameBoard = (() => {
     
     
     return {
-        myMethod: function(){
-            console.log(gameBoardArray)},
+       // myMethod: function(){
+         //   console.log(gameBoardArray)},
       
         gameBoardArray
         }
@@ -59,7 +64,7 @@ const playerFactory = (name, marker) => {
 
         displayController.cells.forEach((cell, index) => cell.addEventListener('click', () =>{
             gameBoard.gameBoardArray.splice(index, 1, marker)
-            displayController.displayBoard
+            displayController.displayBoard()
         }, {once:true}))
 
             
@@ -72,33 +77,70 @@ const playerFactory = (name, marker) => {
  const playerOne = playerFactory('One', 'X');
  const playerTwo = playerFactory('Two', 'O');
 
+
  const displayController = (() => {
+
+    const cells = document.querySelectorAll('.cell')
 
     const displayBoard = () => {
 
-        const cells = document.querySelectorAll('.cell')
+        
         for (i in cells){
         cells[i].innerText = gameBoard.gameBoardArray[i]
         console.log(cells[i])
     }
     
     }
-
-    cells.forEach((cell, index) => cell.addEventListener('click', () =>{/* YOU NEED TO READ THE HOVER INFO ON METHODS, WOULD HAVE SAVED F*CKING HOURS!
-    THIS IS HOW YOU ACCESS INDEX FOR NODE LIST TO THEN PASS THROUGH GAMEBOARDARRAY! KNOBS */
-       
-        gameBoard.gameBoardArray.splice(index, 1, `${playerOne.marker}`)
-        console.table(gameBoard.gameBoardArray) //this works a treat, pop it into placeMarker
-        
-    }))
-    
-
-        
-        
-    
-
     return {cells, displayBoard}
  })();
+
+
+ const gameFlow = (() => {
+
+        const firstPlayer = 'x'
+        const secondPlayer = 'o'
+        let turn = firstPlayer
+        let i = 0
+
+    const whoseTurn = () => {
+
+        
+        do{
+        if (turn == firstPlayer){
+            displayController.cells.forEach(cell => cell.addEventListener('click', () => {
+                playerOne.placeMarker()
+                turn = secondPlayer
+                i++
+            }, {once:true}))
+        } else {
+            displayController.cells.forEach(cell => cell.addEventListener('click', () => {
+                playerTwo.placeMarker()
+                turn = firstPlayer
+                i++
+               
+            }, {once:true}))
+        }
+        } while(i<gameBoard.gameBoardArray.length)
+        
+
+        //if statement, if turn == playerone clicklistener on each cell and run playerone.placeMarker else
+
+    }
+
+    return {whoseTurn}
+
+
+/* FUNCTION FOR WHOSE TURN IS IT 
+   FUNCTION/LOGIC FOR WINNER AND DRAWER
+
+*/
+
+
+
+ })()
+
+
+ window.onload(startGame())
 
 
 
