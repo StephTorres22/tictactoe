@@ -57,8 +57,12 @@ const playerFactory = (name, marker) => {
 
     const placeMarker = () => {
 
-        
+        displayController.cells.forEach((cell, index) => cell.addEventListener('click', () =>{
+            gameBoard.gameBoardArray.splice(index, 1, marker)
+            displayController.displayBoard
+        }, {once:true}))
 
+            
        
     }
      
@@ -70,14 +74,35 @@ const playerFactory = (name, marker) => {
 
  const displayController = (() => {
 
-    const cells = document.querySelectorAll('.cell')
-    for (i in cells){//didn't know this would work as cells isn't an array...
+    const displayBoard = () => {
+
+        const cells = document.querySelectorAll('.cell')
+        for (i in cells){
         cells[i].innerText = gameBoard.gameBoardArray[i]
+        console.log(cells[i])
     }
     
+    }
 
+    cells.forEach((cell, index) => cell.addEventListener('click', () =>{/* YOU NEED TO READ THE HOVER INFO ON METHODS, WOULD HAVE SAVED F*CKING HOURS!
+    THIS IS HOW YOU ACCESS INDEX FOR NODE LIST TO THEN PASS THROUGH GAMEBOARDARRAY! KNOBS */
+       
+        gameBoard.gameBoardArray.splice(index, 1, `${playerOne.marker}`)
+        console.table(gameBoard.gameBoardArray) //this works a treat, pop it into placeMarker
+        
+    }))
+    
+
+        
+        
+    
+
+    return {cells, displayBoard}
  })();
 
+
+
+ 
 
 
 
