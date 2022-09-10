@@ -33,30 +33,17 @@
  */
 const gridContainer = document.querySelector('.gridContainer');
 
-//this is a module
-//want to return the gameBoard so it can be edited by player action, placeMarker, 2D array? just arrays in an array
+
+
 const gameBoard = (() => {
     
-    let gameBoardArray = ["1","2","3","4","5","6","7", "8", "9"] //this is inaccessible to players in the private scope of this module. this needs to be made public 
-    //might not be best to have an array of arrays, lots of comparison to check for 3 in a row
-
-    //also with the display, array with 9 " ", iterate over to place in a 3 x 3 grid, when clicked on replace array item with marker? or does the array stay empty?
-
-    //so could define a function that renders the game board to user here?
-
-    //do i define a method for adding a marker to the game board here? as a private function, and call it publicly so it can be accessed by player?
-        let _placeMarker = (marker) =>{
-            gameBoardArray.push(marker)
-        }
-
-        //do i need different methods for first row, second row and third row
-        // if gameBoard[0].length == 3 disable function / onclicks on row 1
+    let gameBoardArray = ["1","2","3","4","5","6","7", "8", "9"] 
     
     
     return {
         myMethod: function(){
             console.log(gameBoardArray)},
-        _placeMarker,
+      
         gameBoardArray
         }
         
@@ -66,35 +53,13 @@ const gameBoard = (() => {
     
 })();
 
-
-
-
-
-//this is an object
-function Player(name, marker){
-    this.name = name
-    this.marker = marker
-
-    this.placeMarker = function(){
-
-    }
-}
-
-//or a factory function
-
 const playerFactory = (name, marker) => {
 
     const placeMarker = () => {
 
-        gameBoard.gameBoardArray.push(marker);
-        displayController.cells.splice([i], 1, `${marker}`);//this doesn't work as i thought it would.
-        console.log(displayController.cells)
-        displayController.cells.forEach(cell => cell.innerText = marker)//changes all the cells inner text to 'X' apart from '9'! go figure
         
-        /* 
-        WHAT DO I NEED TO BE ABLE TO DO?
-        
-        ADD A MARKER AT THE CORRECT INDEX IN THE ARRAY GAMEBOARD, AND DISPLAY*/
+
+       
     }
      
      return {name, marker, placeMarker}
@@ -103,28 +68,16 @@ const playerFactory = (name, marker) => {
  const playerOne = playerFactory('One', 'X');
  const playerTwo = playerFactory('Two', 'O');
 
-//not sure how to make the markers public to be place, also gameboard is priv
-//can you make an array with a max length? eg 3 maybe if row1.length === 3 
+ const displayController = (() => {
 
-const displayController = (() => {
-
-    for (i in gameBoard.gameBoardArray){
-
-        const cell = document.createElement('div');
-        gridContainer.appendChild(cell);
-        cell.classList.add('cell');
-        cell.innerText = gameBoard.gameBoardArray[i];
-
+    const cells = document.querySelectorAll('.cell')
+    for (i in cells){//didn't know this would work as cells isn't an array...
+        cells[i].innerText = gameBoard.gameBoardArray[i]
     }
+    
 
-        const cells = Array.from(document.getElementsByClassName('cell'));
-        cells.forEach(cell => cell.addEventListener('click', () => {
-            playerOne.placeMarker()
-            gameBoard.myMethod()//works with arrow function, need to add a turn based function with an if statement so it knows whether to use playerOne,placeMarker() or playerTwo
-        }));
-          
-        
-        
-       
-    return {cells}
-})();
+ })();
+
+
+
+
