@@ -31,12 +31,13 @@
         If you get this running definitely come show it off in the chatroom. It’s quite an accomplishment!
 
  */
+
+//these are global so every function and module has access to them
 const gridContainer = document.querySelector('.gridContainer');
+const cells = document.querySelectorAll('.cell')
 
-function startGame() {
 
-    return gameFlow.whoseTurn()
-}
+
 
 
 
@@ -45,12 +46,7 @@ const gameBoard = (() => {
     let gameBoardArray = ["1","2","3","4","5","6","7", "8", "9"] 
     
     
-    return {
-       // myMethod: function(){
-         //   console.log(gameBoardArray)},
-      
-        gameBoardArray
-        }
+    return { gameBoardArray }
         
 
     
@@ -59,19 +55,8 @@ const gameBoard = (() => {
 })();
 
 const playerFactory = (name, marker) => {
-
-    const placeMarker = () => {
-
-        displayController.cells.forEach((cell, index) => cell.addEventListener('click', () =>{
-            gameBoard.gameBoardArray.splice(index, 1, marker)
-            displayController.displayBoard()
-        }, {once:true}))
-
-            
-       
-    }
      
-     return {name, marker, placeMarker}
+     return {name, marker}
  }
  
  const playerOne = playerFactory('One', 'X');
@@ -80,67 +65,29 @@ const playerFactory = (name, marker) => {
 
  const displayController = (() => {
 
-    const cells = document.querySelectorAll('.cell')
-
-    const displayBoard = () => {
-
-        
-        for (i in cells){
+    //this is called straight away because displayController is an IIFE
+    for (i in cells){
         cells[i].innerText = gameBoard.gameBoardArray[i]
-        console.log(cells[i])
     }
     
+    
+    //displays current element at index in correct cell
+    //this is not called straight away, but can be called to update the display.
+    const displayBoard = () => {
+
+        for (i in cells){
+            cells[i].innerText = gameBoard.gameBoardArray[i]
+        }
     }
-    return {cells, displayBoard}
+
+    return {displayBoard}
  })();
 
 
- const gameFlow = (() => {
 
-        const firstPlayer = 'x'
-        const secondPlayer = 'o'
-        let turn = firstPlayer
-        let i = 0
-
-    const whoseTurn = () => {
-
-        
-        do{
-        if (turn == firstPlayer){
-            displayController.cells.forEach(cell => cell.addEventListener('click', () => {
-                playerOne.placeMarker()
-                turn = secondPlayer
-                i++
-            }, {once:true}))
-        } else {
-            displayController.cells.forEach(cell => cell.addEventListener('click', () => {
-                playerTwo.placeMarker()
-                turn = firstPlayer
-                i++
-               
-            }, {once:true}))
-        }
-        } while(i<gameBoard.gameBoardArray.length)
-        
-
-        //if statement, if turn == playerone clicklistener on each cell and run playerone.placeMarker else
-
-    }
-
-    return {whoseTurn}
+ 
 
 
-/* FUNCTION FOR WHOSE TURN IS IT 
-   FUNCTION/LOGIC FOR WINNER AND DRAWER
-
-*/
-
-
-
- })()
-
-
- window.onload(startGame())
 
 
 
