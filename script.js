@@ -54,13 +54,13 @@ const gameBoard = (() => {
     
 })();
 
-const playerFactory = (name, marker) => {
+const playerFactory = (name, marker, turn) => {
      
-     return {name, marker}
+     return {name, marker, turn}
  }
  
- const playerOne = playerFactory('One', 'X');
- const playerTwo = playerFactory('Two', 'O');
+ const playerOne = playerFactory('One', 'X', 1);
+ const playerTwo = playerFactory('Two', 'O', -1);
 
 
  const displayController = (() => {
@@ -82,6 +82,48 @@ const playerFactory = (name, marker) => {
 
     return {displayBoard}
  })();
+
+
+const gameFlow =(() => {
+
+
+    let turn = playerOne.turn
+
+
+    //should be called immediately so the onclick is there
+    cells.forEach((cell, index) => cell.addEventListener('click', () => {
+        if(turn == playerOne.turn){
+            gameBoard.gameBoardArray.splice(index, 1, playerOne.marker)
+            displayController.displayBoard()
+            swapTurn()
+        } else if(turn == playerTwo.turn){
+            gameBoard.gameBoardArray.splice(index, 1, playerTwo.marker)
+            displayController.displayBoard()
+            swapTurn()
+        }
+
+        }
+    , {once:true}))
+
+
+    //switchs turns between players based on a number
+    const swapTurn = () => {
+
+        
+
+        return  turn *= -1//saw this as a way to switch turns, couldn't get webdevsimplified ternary operator to work properly
+
+        
+
+    }
+
+    
+
+    
+
+    return { swapTurn  }
+
+})()
 
 
 
