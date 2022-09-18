@@ -116,40 +116,50 @@ const gameFlow =(() => {
                                [2, 5, 8],
                                [3, 6, 9]]
 
+        for ( i in winningCombos) {
+            const combination = winningCombos[i];
+            const gameCombo = [gameBoard[combination[0]], gameBoard[combination[1]], gameBoard[combination[2]]];
 
+            const hasSomeoneWon =  gameBoard[combination[0]] == gameBoard[combination[1]] &&
+                gameBoard[combination[1]] == gameBoard[combination[2]];
 
-
-    /* is this a for loop over gameboard array?
-
-    nested for loop
-    need an if else statement to check if x values are present at x indices
-
-    .includes() looks at the array as a whole, how do i specify at a certain point
-    does this index have this value
-
-    forEach combination 
-     */        
-    
-    const getEachCombo = () =>{
-
-        for (i in winningCombos){
-            let combination = winningCombos[i]
-            //console.log(winningCombos[i])
-            console.log(combination)
-
-            combination.forEach(combo => console.log(gameBoard.gameBoardArray[combo-1])) //this is good, potential start to comparing values at winning combination indices.
-            
+                if (hasSomeoneWon) {
+                return gameBoard[combination[0]];
+                }
         }
-    
-    }
-      
-    
 
-    
-        
-    
 
-    getEachCombo()
+        /* is this a for loop over gameboard array?
+
+        nested for loop
+        need an if else statement to check if x values are present at x indices
+
+        .includes() looks at the array as a whole, how do i specify at a certain point
+        does this index have this value
+
+        forEach combination
+         */
+
+        const getEachCombo = () =>{
+
+            for (i in winningCombos){
+                let combination = winningCombos[i]
+                //console.log(winningCombos[i])
+                console.log(combination)
+
+                combination.forEach(combo => console.log(gameBoard.gameBoardArray[combo-1])) //this is good, potential start to comparing values at winning combination indices.
+
+            }
+
+        }
+
+
+
+
+
+
+
+        getEachCombo()
     }
 
     
