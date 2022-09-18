@@ -116,9 +116,11 @@ const gameFlow =(() => {
                                [2, 5, 8],
                                [3, 6, 9]]
 
-        for (let i = 0; i < winningCombos.length; i++) {
+     
+                               /*
+        for (i in winningCombos) {
             const combination = winningCombos[i];
-            const gameCombo = [gameBoard[combination[0]], gameBoard[combination[1]], gameBoard[combination[2]]];
+            const gameCombo = [gameBoard.gameBoardArray[combination[0]], gameBoard.gameBoardArray[combination[1]], gameBoard.gameBoardArray[combination[2]]];
 
             const hasSomeoneWon =  gameCombo[[0] == gameCombo[1] &&
                 gameCombo[1]] == gameCombo[2];
@@ -127,9 +129,9 @@ const gameFlow =(() => {
                 return gameCombo[1];
                 }
         }
+            
 
-
-        /* is this a for loop over gameboard array?
+         is this a for loop over gameboard array?
 
         nested for loop
         need an if else statement to check if x values are present at x indices
@@ -140,26 +142,37 @@ const gameFlow =(() => {
         forEach combination
          */
 
+       
+     
         const getEachCombo = () =>{
 
             for (i in winningCombos){
-                let combination = winningCombos[i]
+                const combination = winningCombos[i]
                 //console.log(winningCombos[i])
+               console.log(combination)
+              
+
+            combination.forEach((combo, index) => {
+                
+                console.log(gameBoard.gameBoardArray[combo-1])
+                combination.splice(index, 1, gameBoard.gameBoardArray[combo-1])
                 console.log(combination)
 
-                combination.forEach(combo => console.log(gameBoard.gameBoardArray[combo-1])) //this is good, potential start to comparing values at winning combination indices.
+            
+            
+            }) //this is good, potential start to comparing values at winning combination indices.
 
             }
 
         }
 
+        
 
 
+    getEachCombo()
 
 
-
-
-        getEachCombo()
+        
     }
 
     
