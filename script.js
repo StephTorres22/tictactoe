@@ -45,19 +45,17 @@ const gameBoard = (() => {
     
     let gameBoardArray = ["1","2","3","4","5","6","7", "8", "9"] 
     
-    
     return { gameBoardArray }
         
-
-    
-
-    
 })();
+
 
 const playerFactory = (name, marker, turn) => {
      
      return {name, marker, turn}
+
  }
+
  
  const playerOne = playerFactory('One', 'X', 1);
  const playerTwo = playerFactory('Two', 'O', -1);
@@ -69,8 +67,7 @@ const playerFactory = (name, marker, turn) => {
     for (i in cells){
         cells[i].innerText = gameBoard.gameBoardArray[i]
     }
-    
-    
+       
     //displays current element at index in correct cell
     //this is not called straight away, but can be called to update the display.
     const displayBoard = () => {
@@ -81,47 +78,85 @@ const playerFactory = (name, marker, turn) => {
     }
 
     return {displayBoard}
+
  })();
 
 
 const gameFlow =(() => {
 
-
     let turn = playerOne.turn
-
 
     //should be called immediately so the onclick is there
     cells.forEach((cell, index) => cell.addEventListener('click', () => {
         if(turn == playerOne.turn){
             gameBoard.gameBoardArray.splice(index, 1, playerOne.marker)
-            displayController.displayBoard()
-            swapTurn()
+            displayController.displayBoard()            
         } else if(turn == playerTwo.turn){
             gameBoard.gameBoardArray.splice(index, 1, playerTwo.marker)
             displayController.displayBoard()
-            swapTurn()
+            
         }
+        //doesn't need to be in the if else statement, this avoids duplication. you're doing it anyway.
+        swapTurn()
+        decideWinner()
 
-        }
-    , {once:true}))
-
+    }, {once:true}))
 
     //switchs turns between players based on a number
-    const swapTurn = () => {
+    const swapTurn = () => turn *= -1//saw this as a way to switch turns, couldn't get webdevsimplified ternary operator to work properly
+   
+    const decideWinner = () => {
 
+        const winningCombos = [[1, 2, 3],
+                               [4, 5, 6],
+                               [7, 8, 9],
+                               [1, 5, 9],
+                               [3, 5, 7],
+                               [1, 4, 7],
+                               [2, 5, 8],
+                               [3, 6, 9]]
+
+
+
+
+    /* is this a for loop over gameboard array?
+
+    nested for loop
+    need an if else statement to check if x values are present at x indices
+
+    .includes() looks at the array as a whole, how do i specify at a certain point
+    does this index have this value
+
+    forEach combination 
+     */        
+    
+    const getEachCombo = () =>{
+
+        for (i in winningCombos){
+            let combination = winningCombos[i]
+            //console.log(winningCombos[i])
+            console.log(combination)
+
+            combination.forEach(combo => console.log(gameBoard.gameBoardArray[combo-1])) //this is good, potential start to comparing values at winning combination indices.
+            
+        }
+    
+    }
+      
+    
+
+    
         
+    
 
-        return  turn *= -1//saw this as a way to switch turns, couldn't get webdevsimplified ternary operator to work properly
-
-        
-
+    getEachCombo()
     }
 
     
 
     
 
-    return { swapTurn  }
+    return { swapTurn, decideWinner }
 
 })()
 
