@@ -33,6 +33,7 @@
  */
 
 //these are global so every function and module has access to them
+const body = document.querySelector('body');
 const gridContainer = document.querySelector('.gridContainer');
 const cells = document.querySelectorAll('.cell')
 
@@ -77,7 +78,29 @@ const playerFactory = (name, marker, turn) => {
         }
     }
 
-    return {displayBoard}
+    const gameOverDisplay = () => {
+
+        gameFlow.decideWinner()
+        let winnerTag = document.createElement('h1');
+        body.appendChild(winnerTag)
+        winnerTag.style.textAlign = 'center'
+
+        if (gameFlow.decideWinner() == playerOne){
+            for (i in cells){
+                cells[i].innerText = playerOne.marker
+                
+            }
+            winnerTag.innerText = 'Player ' + `${playerOne.name}` + " has won!"        
+        } else if (gameFlow.decideWinner() == playerTwo){
+            for (i in cells){
+                cells[i].innerText = playerTwo.marker
+            }
+            winnerTag.innerText = 'Player ' + `${playerTwo.name}` + ' has won!'
+        }
+
+    }
+
+    return {displayBoard, gameOverDisplay}
 
  })();
 
@@ -85,6 +108,7 @@ const playerFactory = (name, marker, turn) => {
 const gameFlow =(() => {
 
     let turn = playerOne.turn
+    let winner
 
     //should be called immediately so the onclick is there
     cells.forEach((cell, index) => cell.addEventListener('click', () => {
@@ -96,9 +120,9 @@ const gameFlow =(() => {
             displayController.displayBoard()
             
         }
-        //doesn't need to be in the if else statement, this avoids duplication. you're doing it anyway.
+        
         swapTurn()
-        decideWinner()
+        gameOver()
 
     }, {once:true}))
 
@@ -107,7 +131,9 @@ const gameFlow =(() => {
    
     const decideWinner = () => {
 
-        const winningCombos = [[1, 2, 3],
+        
+
+        const _winningCombos = [[1, 2, 3],
                                [4, 5, 6],
                                [7, 8, 9],
                                [1, 5, 9],
@@ -115,9 +141,65 @@ const gameFlow =(() => {
                                [1, 4, 7],
                                [2, 5, 8],
                                [3, 6, 9]]
+        
 
-     
-                               /*
+            for (i in _winningCombos){
+                //breaks down winningCombos array into single combinations does not alter winningCombos 
+                const combination = _winningCombos[i]
+
+                /* much like the forEach loop used on cells in displayController, this takes each individual combination and splices the values of
+                gameboardArray at the correct index  */
+                combination.forEach((combo, index) => {                 
+                combination.splice(index, 1, gameBoard.gameBoardArray[combo-1]) //need -1 as haven't 0 indexed.                      
+                })
+            
+            /* inside the loop so have access to combinations, on each iteration of winningCombos checks each value of individual combination
+            to see if every value is == to a player maker. */
+            if (combination.every((value) => value == playerOne.marker)){
+              return  winner = playerOne
+
+            } else if (combination.every((value) => value == playerTwo.marker)){
+               return winner = playerTwo
+            }
+
+            }
+            
+
+            /* NEED TO DO:
+            
+            - DEFINE DRAWER PARAMETERS
+            
+            - FUNCTION FOR WHEN SOMEONE HAS WON, REMOVE LISTENERS, ALERTS ETC
+              GAMEOVER
+            
+            - RESTART BUTTON TO CLEAR ARRAYS AND BOARD
+            */
+        }
+
+    const gameOver = () => {
+
+        displayController.gameOverDisplay()
+
+        // remove listeners on cells
+        // update display
+
+    }
+
+    
+
+    
+
+    return { swapTurn, decideWinner, gameOver }
+
+})()
+
+
+
+ 
+
+
+
+                      /*
         for (i in winningCombos) {
             const combination = winningCombos[i];
             const gameCombo = [gameBoard.gameBoardArray[combination[0]], gameBoard.gameBoardArray[combination[1]], gameBoard.gameBoardArray[combination[2]]];
@@ -131,70 +213,7 @@ const gameFlow =(() => {
 
             
         }
-            
-
-         is this a for loop over gameboard array?
-
-        nested for loop
-        need an if else statement to check if x values are present at x indices
-
-        .includes() looks at the array as a whole, how do i specify at a certain point
-        does this index have this value
-
-        forEach combination
-         */
-
-       
-     
-        
-
-            for (i in winningCombos){
-                //breaks down winningCombos array into single combinations does not alter winningCombos 
-                const combination = winningCombos[i]
-
-                /* much like the forEach loop used on cells in displayController, this takes each individual combination and splices the values of
-                gameboardArray at the correct index  */
-                combination.forEach((combo, index) => {                 
-                combination.splice(index, 1, gameBoard.gameBoardArray[combo-1]) //need -1 as haven't 0 indexed.                      
-                })
-            
-            /* inside the loop so have access to combinations, on each iteration of winningCombos checks each value of individual combination
-            to see if every value is == to a player maker. */
-            if (combination.every((value) => value == playerOne.marker)){
-                console.log("Player One wins!")
-            } else if (combination.every((value) => value == playerTwo.marker)){
-                console.log("Player Two wins!")
-            }
-
-            }
-            
-
-        
-
-        
-
-
-
-
-
-        
-    }
-
-    
-
-    
-
-    return { swapTurn, decideWinner }
-
-})()
-
-
-
- 
-
-
-
-
+        */
 
  
 
