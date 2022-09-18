@@ -120,11 +120,11 @@ const gameFlow =(() => {
             const combination = winningCombos[i];
             const gameCombo = [gameBoard[combination[0]], gameBoard[combination[1]], gameBoard[combination[2]]];
 
-            const hasSomeoneWon =  gameBoard[combination[0]] == gameBoard[combination[1]] &&
-                gameBoard[combination[1]] == gameBoard[combination[2]];
+            const hasSomeoneWon =  gameCombo[[0] == gameCombo[1] &&
+                gameCombo[1]] == gameCombo[2];
 
                 if (hasSomeoneWon) {
-                return gameBoard[combination[0]];
+                return gameCombo[1];
                 }
         }
 
