@@ -116,7 +116,7 @@ const gameFlow =(() => {
                                [2, 5, 8],
                                [3, 6, 9]]
 
-        for ( i in winningCombos) {
+        for (let i = 0; i < winningCombos.length; i++) {
             const combination = winningCombos[i];
             const gameCombo = [gameBoard[combination[0]], gameBoard[combination[1]], gameBoard[combination[2]]];
 
