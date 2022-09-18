@@ -128,6 +128,8 @@ const gameFlow =(() => {
                 if (hasSomeoneWon) {
                 return gameCombo[1];
                 }
+
+            
         }
             
 
@@ -144,32 +146,35 @@ const gameFlow =(() => {
 
        
      
-        const getEachCombo = () =>{
+        
 
             for (i in winningCombos){
+                //breaks down winningCombos array into single combinations does not alter winningCombos 
                 const combination = winningCombos[i]
-                //console.log(winningCombos[i])
-               console.log(combination)
-              
 
-            combination.forEach((combo, index) => {
-                
-                console.log(gameBoard.gameBoardArray[combo-1])
-                combination.splice(index, 1, gameBoard.gameBoardArray[combo-1])
-                console.log(combination)
-
+                /* much like the forEach loop used on cells in displayController, this takes each individual combination and splices the values of
+                gameboardArray at the correct index  */
+                combination.forEach((combo, index) => {                 
+                combination.splice(index, 1, gameBoard.gameBoardArray[combo-1]) //need -1 as haven't 0 indexed.                      
+                })
             
-            
-            }) //this is good, potential start to comparing values at winning combination indices.
-
+            /* inside the loop so have access to combinations, on each iteration of winningCombos checks each value of individual combination
+            to see if every value is == to a player maker. */
+            if (combination.every((value) => value == playerOne.marker)){
+                console.log("Player One wins!")
+            } else if (combination.every((value) => value == playerTwo.marker)){
+                console.log("Player Two wins!")
             }
 
-        }
+            }
+            
+
+        
 
         
 
 
-    getEachCombo()
+
 
 
         
