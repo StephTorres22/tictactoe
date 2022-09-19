@@ -80,10 +80,15 @@ const playerFactory = (name, marker, turn) => {
 
     const gameOverDisplay = () => {
 
-        gameFlow.decideWinner()
+        gameFlow.decideWinner();
         let winnerTag = document.createElement('h1');
-        body.appendChild(winnerTag)
-        winnerTag.style.textAlign = 'center'
+        body.appendChild(winnerTag);
+        winnerTag.style.textAlign = 'center';
+
+        let restartButton = document.createElement('buttom');
+        body.appendChild(restartButton)
+      //  restartButton.innerText = 'Player Again'
+      //  restartButton.addEventListener('click', restartGame())
 
         if (gameFlow.decideWinner() == playerOne){
             for (i in cells){
@@ -114,26 +119,28 @@ const gameFlow =(() => {
     cells.forEach((cell, index) => cell.addEventListener('click', () => {
         if(turn == playerOne.turn){
             gameBoard.gameBoardArray.splice(index, 1, playerOne.marker)
-            displayController.displayBoard()            
+                        
         } else if(turn == playerTwo.turn){
             gameBoard.gameBoardArray.splice(index, 1, playerTwo.marker)
-            displayController.displayBoard()
+            
             
         }
         
-        swapTurn()
-        gameOver()
 
     }, {once:true}))
 
+    
+    cells.forEach(cell => cell.addEventListener('click', displayController.displayBoard, {once : true}));
+    
+
     //switchs turns between players based on a number
     const swapTurn = () => turn *= -1//saw this as a way to switch turns, couldn't get webdevsimplified ternary operator to work properly
+    cells.forEach(cell => cell.addEventListener('click', swapTurn, {once : true}))
    
+    //returns either playerOne or playerTwo
     const decideWinner = () => {
 
-        
-
-        const _winningCombos = [[1, 2, 3],
+            const _winningCombos = [[1, 2, 3],
                                [4, 5, 6],
                                [7, 8, 9],
                                [1, 5, 9],
@@ -160,7 +167,7 @@ const gameFlow =(() => {
 
             } else if (combination.every((value) => value == playerTwo.marker)){
                return winner = playerTwo
-            }
+            } 
 
             }
             
@@ -180,12 +187,14 @@ const gameFlow =(() => {
 
         displayController.gameOverDisplay()
 
+        cells.forEach(cell => cell.removeEventListener('click', displayController.displayBoard, {once : true} ))
+
         // remove listeners on cells
-        // update display
+        
 
     }
 
-    
+    cells.forEach(cell => cell.addEventListener('click', gameOver, {once : true}))
 
     
 
