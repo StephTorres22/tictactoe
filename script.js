@@ -80,28 +80,29 @@ const playerFactory = (name, marker, turn) => {
 
     const gameOverDisplay = () => {
 
-        gameFlow.decideWinner();
+        gameFlow.decideWinner()
         let winnerTag = document.createElement('h1');
         body.appendChild(winnerTag);
         winnerTag.style.textAlign = 'center';
 
-        let restartButton = document.createElement('buttom');
-        body.appendChild(restartButton)
-      //  restartButton.innerText = 'Player Again'
-      //  restartButton.addEventListener('click', restartGame())
+        
 
         if (gameFlow.decideWinner() == playerOne){
+            gameFlow.gameOver()//placed twice within each if statement because condition must be true before firing.
             for (i in cells){
                 cells[i].innerText = playerOne.marker
                 
             }
             winnerTag.innerText = 'Player ' + `${playerOne.name}` + " has won!"        
         } else if (gameFlow.decideWinner() == playerTwo){
+            gameFlow.gameOver()
             for (i in cells){
                 cells[i].innerText = playerTwo.marker
             }
             winnerTag.innerText = 'Player ' + `${playerTwo.name}` + ' has won!'
         }
+
+        
 
     }
 
@@ -113,7 +114,6 @@ const playerFactory = (name, marker, turn) => {
 const gameFlow =(() => {
 
     let turn = playerOne.turn
-    let winner
 
     //should be called immediately so the onclick is there
     cells.forEach((cell, index) => cell.addEventListener('click', () => {
@@ -151,6 +151,7 @@ const gameFlow =(() => {
         
 
             for (i in _winningCombos){
+
                 //breaks down winningCombos array into single combinations does not alter winningCombos 
                 const combination = _winningCombos[i]
 
@@ -163,13 +164,14 @@ const gameFlow =(() => {
             /* inside the loop so have access to combinations, on each iteration of winningCombos checks each value of individual combination
             to see if every value is == to a player maker. */
             if (combination.every((value) => value == playerOne.marker)){
-              return  winner = playerOne
+              return  playerOne
 
             } else if (combination.every((value) => value == playerTwo.marker)){
-               return winner = playerTwo
+               return playerTwo
             } 
 
             }
+            
             
 
             /* NEED TO DO:
@@ -183,18 +185,27 @@ const gameFlow =(() => {
             */
         }
 
-    const gameOver = () => {
+        cells.forEach(cell => cell.addEventListener('click', decideWinner, {once : true}))
+        cells.forEach(cell => cell.addEventListener('click', displayController.gameOverDisplay, {once : true}))
 
-        displayController.gameOverDisplay()
+        const gameOver = () => {
 
-        cells.forEach(cell => cell.removeEventListener('click', displayController.displayBoard, {once : true} ))
+          /*   let restartButton = document.createElement('button');
+            body.appendChild(restartButton)
+            restartButton.innerText = 'Player Again'
+            restartButton.addEventListener('click', restartGame())
+ */
+            //removes relevant listeners
 
-        // remove listeners on cells
+            cells.forEach(cell => cell.removeEventListener('click', displayController.displayBoard))
+            cells.forEach(cell => cell.removeEventListener('click', swapTurn))
+            
         
+       
 
     }
 
-    cells.forEach(cell => cell.addEventListener('click', gameOver, {once : true}))
+    
 
     
 
