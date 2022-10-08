@@ -87,15 +87,15 @@ const playerFactory = (name, marker, turn) => {
 
         
 
-        if (gameFlow.decideWinner() == playerOne){
-            gameFlow.gameOver()//placed twice within each if statement because condition must be true before firing.
+        if (gameFlow.decideWinner() == playerOne.marker){
+          //  gameFlow.gameOver()//placed twice within each if statement because condition must be true before firing.
             for (i in cells){
                 cells[i].innerText = playerOne.marker
                 
             }
             winnerTag.innerText = 'Player ' + `${playerOne.name}` + " has won!"        
-        } else if (gameFlow.decideWinner() == playerTwo){
-            gameFlow.gameOver()
+        } else if (gameFlow.decideWinner() == playerTwo.marker){
+           // gameFlow.gameOver()
             for (i in cells){
                 cells[i].innerText = playerTwo.marker
             }
@@ -140,14 +140,14 @@ const gameFlow =(() => {
     //returns either playerOne or playerTwo
     const decideWinner = () => {
 
-            const _winningCombos = [[1, 2, 3],
-                               [4, 5, 6],
-                               [7, 8, 9],
-                               [1, 5, 9],
-                               [3, 5, 7],
+            const _winningCombos = [[0, 1, 2],
+                               [3, 4, 5],
+                               [6, 7, 8],
+                               [0, 4, 8],
+                               [2, 4, 6],
+                               [0, 3, 6],
                                [1, 4, 7],
-                               [2, 5, 8],
-                               [3, 6, 9]]
+                               [2, 5, 8]]
         
 
             for (i in _winningCombos){
@@ -155,20 +155,32 @@ const gameFlow =(() => {
                 //breaks down winningCombos array into single combinations does not alter winningCombos 
                 const combination = _winningCombos[i]
 
+
+
+                
+                    const gameCombo = [gameBoard.gameBoardArray[combination[0]], gameBoard.gameBoardArray[combination[1]], gameBoard.gameBoardArray[combination[2]]];
+        
+                    const hasSomeoneWon =  gameCombo[0] == gameCombo[1] &&
+                        gameCombo[1] == gameCombo[2];
+                        
+        
+                        if (hasSomeoneWon) {
+                        return gameCombo[1];
+                        }
                 /* much like the forEach loop used on cells in displayController, this takes each individual combination and splices the values of
                 gameboardArray at the correct index  */
-                combination.forEach((combo, index) => {                 
+                /* combination.forEach((combo, index) => {                 
                 combination.splice(index, 1, gameBoard.gameBoardArray[combo-1]) //need -1 as haven't 0 indexed.                      
                 })
             
             /* inside the loop so have access to combinations, on each iteration of winningCombos checks each value of individual combination
             to see if every value is == to a player maker. */
-            if (combination.every((value) => value == playerOne.marker)){
+            /* if (combination.every((value) => value == playerOne.marker)){
               return  playerOne
 
             } else if (combination.every((value) => value == playerTwo.marker)){
                return playerTwo
-            } 
+            }  */
 
             }
             
@@ -185,7 +197,7 @@ const gameFlow =(() => {
             */
         }
 
-        cells.forEach(cell => cell.addEventListener('click', decideWinner, {once : true}))
+     //   cells.forEach(cell => cell.addEventListener('click', decideWinner, {once : true}))
         cells.forEach(cell => cell.addEventListener('click', displayController.gameOverDisplay, {once : true}))
 
         const gameOver = () => {
@@ -220,16 +232,7 @@ const gameFlow =(() => {
 
 
                       /*
-        for (i in winningCombos) {
-            const combination = winningCombos[i];
-            const gameCombo = [gameBoard.gameBoardArray[combination[0]], gameBoard.gameBoardArray[combination[1]], gameBoard.gameBoardArray[combination[2]]];
-
-            const hasSomeoneWon =  gameCombo[[0] == gameCombo[1] &&
-                gameCombo[1]] == gameCombo[2];
-
-                if (hasSomeoneWon) {
-                return gameCombo[1];
-                }
+       
 
             
         }
