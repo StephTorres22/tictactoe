@@ -44,7 +44,7 @@ const cells = document.querySelectorAll('.cell')
 
 const gameBoard = (() => {
     
-    let gameBoardArray = ["1","2","3","4","5","6","7", "8", "9"] 
+    const gameBoardArray = ["1","2","3","4","5","6","7", "8", "9"] 
     
     return { gameBoardArray }
         
@@ -80,11 +80,31 @@ const playerFactory = (name, marker, turn) => {
 
     const gameOverDisplay = () => {
 
-        gameFlow.decideWinner()
-        let winnerTag = document.createElement('h1');
-        body.appendChild(winnerTag);
-        winnerTag.style.textAlign = 'center';
+        
 
+        const winnerDiv = document.createElement('div');
+        body.appendChild(winnerDiv);
+        winnerDiv.style.textAlign = 'center';
+        let winnerTag = document.createElement('h1');
+        
+        winnerDiv.classList.add('winner');       
+        winnerDiv.appendChild(winnerTag);
+        
+        winnerTag.style.textAlign = 'center'; 
+
+        function removerWinnerDiv(){
+            body.removeChild(winnerDiv)
+        }
+        
+        function createRestartButton(){
+
+            let restartButton = document.createElement('button');
+            winnerDiv.appendChild(restartButton);
+            restartButton.innerText = "Play again";
+            restartButton.addEventListener('click', gameFlow.resetGame);
+            restartButton.addEventListener('click', removerWinnerDiv);
+
+        }
         
 
         if (gameFlow.decideWinner() == playerOne.marker){
@@ -92,14 +112,18 @@ const playerFactory = (name, marker, turn) => {
             for (i in cells){
                 cells[i].innerText = playerOne.marker
                 
-            }
+            }            
             winnerTag.innerText = 'Player ' + `${playerOne.name}` + " has won!"        
+            createRestartButton()
+            gameFlow.gameOver()
         } else if (gameFlow.decideWinner() == playerTwo.marker){
            // gameFlow.gameOver()
             for (i in cells){
                 cells[i].innerText = playerTwo.marker
-            }
+            }            
             winnerTag.innerText = 'Player ' + `${playerTwo.name}` + ' has won!'
+            createRestartButton()
+            gameFlow.gameOver()
         }
 
         
@@ -129,6 +153,23 @@ const gameFlow =(() => {
 
     }, {once:true}))
 
+    const placeMarker = () => {
+
+        cells.forEach((cell, index) => cell.addEventListener('click', () => {
+            if(turn == playerOne.turn){
+                gameBoard.gameBoardArray.splice(index, 1, playerOne.marker)
+                            
+            } else if(turn == playerTwo.turn){
+                gameBoard.gameBoardArray.splice(index, 1, playerTwo.marker)
+                
+                
+            }        
+        
+        }, {once: true}))
+
+    }
+    
+
     
     cells.forEach(cell => cell.addEventListener('click', displayController.displayBoard, {once : true}));
     
@@ -136,8 +177,10 @@ const gameFlow =(() => {
     //switchs turns between players based on a number
     const swapTurn = () => turn *= -1//saw this as a way to switch turns, couldn't get webdevsimplified ternary operator to work properly
     cells.forEach(cell => cell.addEventListener('click', swapTurn, {once : true}))
+
+
    
-    //returns either playerOne or playerTwo
+    //returns either playerOne.marker or playerTwo.marker
     const decideWinner = () => {
 
             const _winningCombos = [[0, 1, 2],
@@ -155,33 +198,18 @@ const gameFlow =(() => {
                 //breaks down winningCombos array into single combinations does not alter winningCombos 
                 const combination = _winningCombos[i]
 
-
-
+                //creates indiviual arrays from gameboardarray using values from indexes of each winning combination
+                const gameCombo = [gameBoard.gameBoardArray[combination[0]], gameBoard.gameBoardArray[combination[1]], gameBoard.gameBoardArray[combination[2]]];
                 
-                    const gameCombo = [gameBoard.gameBoardArray[combination[0]], gameBoard.gameBoardArray[combination[1]], gameBoard.gameBoardArray[combination[2]]];
-        
-                    const hasSomeoneWon =  gameCombo[0] == gameCombo[1] &&
-                        gameCombo[1] == gameCombo[2];
+                //checks values at indexes to see if equal, type boolean
+                const hasSomeoneWon =  gameCombo[0] == gameCombo[1] &&
+                    gameCombo[1] == gameCombo[2];
                         
-        
-                        if (hasSomeoneWon) {
-                        return gameCombo[1];
-                        }
-                /* much like the forEach loop used on cells in displayController, this takes each individual combination and splices the values of
-                gameboardArray at the correct index  */
-                /* combination.forEach((combo, index) => {                 
-                combination.splice(index, 1, gameBoard.gameBoardArray[combo-1]) //need -1 as haven't 0 indexed.                      
-                })
-            
-            /* inside the loop so have access to combinations, on each iteration of winningCombos checks each value of individual combination
-            to see if every value is == to a player maker. */
-            /* if (combination.every((value) => value == playerOne.marker)){
-              return  playerOne
-
-            } else if (combination.every((value) => value == playerTwo.marker)){
-               return playerTwo
-            }  */
-
+                //uses boolean and returns value if true.
+                if (hasSomeoneWon) {
+                return gameCombo[1];
+                }
+               
             }
             
             
@@ -197,31 +225,38 @@ const gameFlow =(() => {
             */
         }
 
-     //   cells.forEach(cell => cell.addEventListener('click', decideWinner, {once : true}))
-        cells.forEach(cell => cell.addEventListener('click', displayController.gameOverDisplay, {once : true}))
+     
+    cells.forEach(cell => cell.addEventListener('click', displayController.gameOverDisplay, {once : true}))
 
-        const gameOver = () => {
+     const gameOver = () => {
 
-          /*   let restartButton = document.createElement('button');
-            body.appendChild(restartButton)
-            restartButton.innerText = 'Player Again'
-            restartButton.addEventListener('click', restartGame())
- */
-            //removes relevant listeners
-
-            cells.forEach(cell => cell.removeEventListener('click', displayController.displayBoard))
-            cells.forEach(cell => cell.removeEventListener('click', swapTurn))
-            
-        
+          
+        cells.forEach(cell => cell.removeEventListener('click', displayController.gameOverDisplay))
+        cells.forEach(cell => cell.removeEventListener('click', displayController.displayBoard))
+        cells.forEach(cell => cell.removeEventListener('click', swapTurn))       
        
-
     }
 
-    
+
+    const resetGame = () => {
+
+        gameBoard.gameBoardArray = ["1","2","3","4","5","6","7", "8", "9"]
+
+        cells.forEach(cell => cell.addEventListener('click', displayController.displayBoard))
+        cells.forEach(cell => cell.addEventListener('click', swapTurn))
+        cells.forEach(cell => cell.addEventListener('click', displayController.gameOverDisplay))
+        placeMarker()
+        displayController.displayBoard()
+        
+    }
+
+
 
     
 
-    return { swapTurn, decideWinner, gameOver }
+    
+
+    return { swapTurn, decideWinner, gameOver, resetGame }
 
 })()
 
@@ -231,12 +266,7 @@ const gameFlow =(() => {
 
 
 
-                      /*
-       
-
-            
-        }
-        */
+         
 
  
 

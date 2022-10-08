@@ -17,3 +17,15 @@
     border-color: black;
 
 }
+
+h1{
+    margin: 5px;
+}
+
+button{
+    margin: 5px;
+}
+
+.winner{
+    height: auto;
+}
