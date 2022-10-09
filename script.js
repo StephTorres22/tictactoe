@@ -44,7 +44,7 @@ const cells = document.querySelectorAll('.cell')
 
 const gameBoard = (() => {
     
-    const gameBoardArray = ["1","2","3","4","5","6","7", "8", "9"] 
+    const gameBoardArray = [" "," "," "," "," "," "," ", " ", " "] 
     
     return { gameBoardArray }
         
@@ -142,7 +142,7 @@ const gameFlow =(() => {
     let turn = playerOne.turn
     
 
-    //should be called immediately so the onclick is there as in gameflow iefi
+    //should be called immediately so the onclick is there as in gameflow iefe
 
     //checks against whether a marker has been placed, in relevant cell, does not allow player to place in occupied cell.
 
@@ -198,14 +198,25 @@ const gameFlow =(() => {
                 const hasSomeoneWon =  gameCombo[0] == gameCombo[1] &&
                     gameCombo[1] == gameCombo[2];
 
-                const gameBoardFull = gameBoard.gameBoardArray.every((value) => value == playerOne.marker && playerTwo.marker)    
+                const gameBoardFull = gameBoard.gameBoardArray.every((value) => 
+                                        {if (value == playerOne.marker || value == playerTwo.marker){
+                                        return true
+                                        } else return false
+                                        })
+                
+
+                
+                    
+                
+                
+                
+                //gameBoard.gameBoardArray.every((value, index) => value[index] == playerOne.marker || playerTwo.marker)    
                         
                 //uses boolean and returns value if true.
                 if (hasSomeoneWon) {
                 return gameCombo[1];
-                } else if (!gameBoardFull){ return 'Tie' }
-                    return 'Tie'
-                
+                } else if (gameBoardFull){ return 'Tie' }
+                                   
             }
         }
 
@@ -224,7 +235,7 @@ const gameFlow =(() => {
 
     const resetGame = () => {
 
-        gameBoard.gameBoardArray = ["1","2","3","4","5","6","7", "8", "9"]
+        gameBoard.gameBoardArray = [" "," "," "," "," "," "," ", " ", " "]
         turn = playerOne.turn
 
         cells.forEach(cell => cell.addEventListener('click', displayController.displayBoard))
