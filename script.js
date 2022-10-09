@@ -108,7 +108,6 @@ const playerFactory = (name, marker, turn) => {
         
 
         if (gameFlow.decideWinner() == playerOne.marker){
-          //  gameFlow.gameOver()//placed twice within each if statement because condition must be true before firing.
             for (i in cells){
                 cells[i].innerText = playerOne.marker
                 
@@ -117,16 +116,19 @@ const playerFactory = (name, marker, turn) => {
             createRestartButton()
             gameFlow.gameOver()
         } else if (gameFlow.decideWinner() == playerTwo.marker){
-           // gameFlow.gameOver()
             for (i in cells){
                 cells[i].innerText = playerTwo.marker
             }            
             winnerTag.innerText = 'Player ' + `${playerTwo.name}` + ' has won!'
             createRestartButton()
             gameFlow.gameOver()
+        } else if (gameFlow.decideWinner() == 'Tie'){
+            winnerTag.innerText = 'It\'s a tie!'
+            createRestartButton()
+            gameFlow.gameOver()
         }
 
-        
+        // can probably rearrange this code so game over calls the display, and so remove repeatition of function calls.
 
     }
 
@@ -136,52 +138,43 @@ const playerFactory = (name, marker, turn) => {
 
 
 const gameFlow =(() => {
-
+    
     let turn = playerOne.turn
+    
 
-    //should be called immediately so the onclick is there
-    cells.forEach((cell, index) => cell.addEventListener('click', () => {
-        if(turn == playerOne.turn){
-            gameBoard.gameBoardArray.splice(index, 1, playerOne.marker)
-                        
-        } else if(turn == playerTwo.turn){
-            gameBoard.gameBoardArray.splice(index, 1, playerTwo.marker)
-            
-            
+    //should be called immediately so the onclick is there as in gameflow iefi
+
+    //checks against whether a marker has been placed, in relevant cell, does not allow player to place in occupied cell.
+
+
+
+    for (i in gameBoard.gameBoardArray){
+        if (gameBoard.gameBoardArray[i] !== playerOne.marker || playerTwo.marker){
+            cells.forEach((cell, index) => cell.addEventListener('click', () => {
+                if(turn == playerOne.turn && gameBoard.gameBoardArray[index] !== playerTwo.marker){
+                    gameBoard.gameBoardArray.splice(index, 1, playerOne.marker)
+                    swapTurn()
+                                
+                } else if(turn == playerTwo.turn && gameBoard.gameBoardArray[index] !== playerOne.marker){
+                    gameBoard.gameBoardArray.splice(index, 1, playerTwo.marker)
+                    swapTurn()
+                    
+                }
+            }))
         }
-        
-
-    }, {once:true}))
-
-    const placeMarker = () => {
-
-        cells.forEach((cell, index) => cell.addEventListener('click', () => {
-            if(turn == playerOne.turn){
-                gameBoard.gameBoardArray.splice(index, 1, playerOne.marker)
-                            
-            } else if(turn == playerTwo.turn){
-                gameBoard.gameBoardArray.splice(index, 1, playerTwo.marker)
-                
-                
-            }        
-        
-        }, {once: true}))
-
     }
     
 
-    
     cells.forEach(cell => cell.addEventListener('click', displayController.displayBoard, {once : true}));
     
 
     //switchs turns between players based on a number
     const swapTurn = () => turn *= -1//saw this as a way to switch turns, couldn't get webdevsimplified ternary operator to work properly
-    cells.forEach(cell => cell.addEventListener('click', swapTurn, {once : true}))
-
-
-   
+  
     //returns either playerOne.marker or playerTwo.marker
     const decideWinner = () => {
+
+            
 
             const _winningCombos = [[0, 1, 2],
                                [3, 4, 5],
@@ -204,25 +197,16 @@ const gameFlow =(() => {
                 //checks values at indexes to see if equal, type boolean
                 const hasSomeoneWon =  gameCombo[0] == gameCombo[1] &&
                     gameCombo[1] == gameCombo[2];
+
+                const gameBoardFull = gameBoard.gameBoardArray.every((value) => value == playerOne.marker && playerTwo.marker)    
                         
                 //uses boolean and returns value if true.
                 if (hasSomeoneWon) {
                 return gameCombo[1];
-                }
-               
+                } else if (!gameBoardFull){ return 'Tie' }
+                    return 'Tie'
+                
             }
-            
-            
-
-            /* NEED TO DO:
-            
-            - DEFINE DRAWER PARAMETERS
-            
-            - FUNCTION FOR WHEN SOMEONE HAS WON, REMOVE LISTENERS, ALERTS ETC
-              GAMEOVER
-            
-            - RESTART BUTTON TO CLEAR ARRAYS AND BOARD
-            */
         }
 
      
@@ -230,25 +214,26 @@ const gameFlow =(() => {
 
      const gameOver = () => {
 
-          
+        //stops the board from updating once game, over has been called  
         cells.forEach(cell => cell.removeEventListener('click', displayController.gameOverDisplay))
         cells.forEach(cell => cell.removeEventListener('click', displayController.displayBoard))
-        cells.forEach(cell => cell.removeEventListener('click', swapTurn))       
-       
+      
+        
     }
 
 
     const resetGame = () => {
 
         gameBoard.gameBoardArray = ["1","2","3","4","5","6","7", "8", "9"]
+        turn = playerOne.turn
 
         cells.forEach(cell => cell.addEventListener('click', displayController.displayBoard))
-        cells.forEach(cell => cell.addEventListener('click', swapTurn))
         cells.forEach(cell => cell.addEventListener('click', displayController.gameOverDisplay))
-        placeMarker()
         displayController.displayBoard()
         
     }
+
+   
 
 
 
@@ -259,6 +244,7 @@ const gameFlow =(() => {
     return { swapTurn, decideWinner, gameOver, resetGame }
 
 })()
+
 
 
 
